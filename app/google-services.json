@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "533478745063",
+    "project_id": "gk-money-2703",
+    "storage_bucket": "gk-money-2703.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:533478745063:android:cce2b6ac8250fc21f95342",
+        "android_client_info": {
+          "package_name": "com.example.gkmoney"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSsKOw_IUJof_f-iv67VuPxFoStZMSGT0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
