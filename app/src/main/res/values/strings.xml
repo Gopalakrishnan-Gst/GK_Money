@@ -15,4 +15,6 @@
     <string name="noteDate">Date</string>
     <string name="Add">Add</string>
     <string name="cancel">Cancel</string>
+    <string name="All">All</string>
+    <string name="CurrentMonth">CurrentMonth</string>
 </resources>
