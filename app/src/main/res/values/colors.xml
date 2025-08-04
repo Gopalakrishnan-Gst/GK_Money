@@ -4,4 +4,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="lavendar">#1E88E5</color>
     <color name="DarkGrey">#636363</color>
+    <color name="VeryLightGrey">#F5F5F5</color>
+    <color name="PrimaryBlue">#1E88E5</color>
+
 </resources>

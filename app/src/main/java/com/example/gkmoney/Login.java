@@ -85,9 +85,11 @@ public class Login extends AppCompatActivity {
 
                 if (emailValue.isEmpty()){
                     Toast.makeText(Login.this, "Please enter email id", Toast.LENGTH_SHORT).show();
+                    return;
                 }
                 if (passwordValue.isEmpty()){
                     Toast.makeText(Login.this, "Please enter password", Toast.LENGTH_SHORT).show();
+                    return;
                 }
 
                 firebaseAuth.signInWithEmailAndPassword(emailValue, passwordValue)

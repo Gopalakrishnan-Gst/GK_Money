@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -29,6 +30,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firestore.v1.WriteResult;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -42,8 +44,10 @@ public class AddNote extends AppCompatActivity implements AdapterView.OnItemSele
     };
 
     EditText noteDate, noteAmount, noteDescription;
-    String noteTypeValue, noteDateValue, noteAmountValue, noteDescriptionValue;
+    String noteTypeValue, noteDescriptionValue;
     Button cancel, addNote;
+    Date noteDateValue;
+    Double noteAmountValue;
 
     FirebaseFirestore db;
 
@@ -84,11 +88,14 @@ public class AddNote extends AppCompatActivity implements AdapterView.OnItemSele
 
         Spinner noteType = findViewById(R.id.noteType);
         noteType.setOnItemSelectedListener(this);
+
         ArrayAdapter<String> ad = new ArrayAdapter<>(
                 this,
-                android.R.layout.simple_spinner_item,
+                R.layout.spinner_item,
                 noteTypes
         );
+
+
         ad.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         noteType.setAdapter(ad);
 
@@ -107,7 +114,7 @@ public class AddNote extends AppCompatActivity implements AdapterView.OnItemSele
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
                                 // on below line we are setting date to our edit text.
-                                noteDate.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+                                noteDate.setText(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
 
                             }
                         },
@@ -135,8 +142,26 @@ public class AddNote extends AppCompatActivity implements AdapterView.OnItemSele
         addNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                noteDateValue=noteDate.getText().toString().trim();
-                noteAmountValue=noteAmount.getText().toString().trim();
+
+                if (noteTypeValue.isEmpty() || noteAmount.getText().toString().isEmpty()  || noteDate.getText().toString().isEmpty() || noteDescriptionValue.isEmpty()){
+                    Toast.makeText(AddNote.this, "Please fill all details!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+                String noteDateText= noteDate.getText().toString().trim();
+
+                if (!noteDateText.isEmpty()) {
+
+
+                    try {
+                        noteDateValue = formatter.parse(noteDate.getText().toString().trim());
+                    } catch (ParseException e) {
+                        Toast.makeText(AddNote.this, e.getMessage().toString(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+                noteAmountValue=Double.valueOf(noteAmount.getText().toString().trim());
                 noteDescriptionValue=noteDescription.getText().toString().trim();
 
                 SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
@@ -144,9 +169,7 @@ public class AddNote extends AppCompatActivity implements AdapterView.OnItemSele
                 String CreatedOn = sdf.format(new Date());
                 String CreatedBy = firebaseAuth.getCurrentUser().getEmail().toString();
 
-                if (noteTypeValue.isEmpty() || noteAmountValue.isEmpty() || noteDateValue.isEmpty() || noteDescriptionValue.isEmpty()){
-                    Toast.makeText(AddNote.this, "Please fill all details!", Toast.LENGTH_SHORT).show();
-                }else{
+
                     Map<String, Object> note = new HashMap<>();
                     note.put("NOTE_TYPE", noteTypeValue);
                     note.put("NOTE_DATE", noteDateValue);
@@ -173,10 +196,11 @@ public class AddNote extends AppCompatActivity implements AdapterView.OnItemSele
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
                                     Toast.makeText(AddNote.this, "Failed to add note!", Toast.LENGTH_SHORT).show();
+
                                 }
                             });
 
-                }
+
 
 
 
@@ -188,6 +212,7 @@ public class AddNote extends AppCompatActivity implements AdapterView.OnItemSele
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         noteTypeValue = noteTypes[position];
+
     }
 
     @Override

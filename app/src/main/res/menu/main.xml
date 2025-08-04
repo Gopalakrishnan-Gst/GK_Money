@@ -7,5 +7,7 @@
         android:icon="@drawable/baseline_logout_24"
         android:orderInCategory="100"
         android:title="Log out"
-        app:showAsAction="never" />
+        android:iconTint="@color/white"
+        android:background="#1E88E5"
+        app:showAsAction="collapseActionView" />
 </menu>

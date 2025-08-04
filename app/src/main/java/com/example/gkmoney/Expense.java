@@ -1,13 +1,15 @@
 package com.example.gkmoney;
 
+import java.util.Date;
+
 public class Expense {
     public String NoteType;
     public String NoteDescription;
-    public String date;
+    public Date date;
     public double amount;
     public int iconResId;
 
-    public Expense(String NoteType, String NoteDescription, String date, double amount, int iconResId) {
+    public Expense(String NoteType, String NoteDescription, Date date, double amount, int iconResId) {
         this.NoteType = NoteType;
         this.NoteDescription = NoteDescription;
         this.date = date;

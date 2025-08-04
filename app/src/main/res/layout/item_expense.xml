@@ -1,12 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="8dp"
+    android:layout_height="wrap_content"
+    app:cardElevation="4dp"
+    app:cardCornerRadius="8dp"
+    app:cardBackgroundColor="@android:color/white"
+    app:strokeColor="#E0E0E0"
+    app:strokeWidth="1dp">
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="12dp"
     android:orientation="horizontal"
     android:gravity="center_vertical"
     android:background="?android:selectableItemBackground">
+
+
 
     <ImageView
         android:id="@+id/noteType"
@@ -28,14 +40,14 @@
             android:textSize="14sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#777" />
+            android:textColor="#212121" />
         <TextView
             android:id="@+id/noteDate"
             android:text="2025-07-15"
             android:textSize="14sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#777" />
+            android:textColor="#757575" />
     </LinearLayout>
 
     <TextView
@@ -46,3 +58,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

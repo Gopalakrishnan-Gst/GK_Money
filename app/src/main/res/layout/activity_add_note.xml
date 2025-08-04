@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:gravity="center"
     android:padding="15sp"
+    android:background="#F5F5F5"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".AddNote">
@@ -16,60 +17,75 @@
         android:layout_marginBottom="50sp"
         android:gravity="center"
         android:text="@string/AddNote"
-        android:textSize="50sp"
+        android:textColor="#1E88E5"
+        android:textSize="28sp"
         android:textStyle="bold" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_marginBottom="20sp"
+        android:background="#FFFFFF"
+        android:padding="8dp"
+        android:hint="Note Type"
+        android:textColorHint="@color/PrimaryBlue"
         android:layout_height="wrap_content">
     <Spinner
         android:id="@+id/noteType"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        android:textColor="#212121"
+        android:padding="10dp"
+        android:drawableEnd="@drawable/baseline_arrow_drop_down_24"
+        android:background="@android:color/transparent"
+        android:popupBackground="@color/PrimaryBlue"
+        android:spinnerMode="dropdown"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_marginBottom="20sp"
+        android:padding="10dp"
         android:layout_height="wrap_content">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="number"
+            android:focusable="false"
+            android:clickable="true"
+            android:textColor="#212121"
+            android:background="#FFFFFF"
+            android:textColorHint="@color/PrimaryBlue"
             android:id="@+id/noteDate"
             android:hint="@string/noteDate"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_marginBottom="20sp"
+        android:padding="10dp"
         android:layout_height="wrap_content">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="number"
+            android:textColor="#212121"
+            android:background="#FFFFFF"
+            android:textColorHint="@color/PrimaryBlue"
             android:id="@+id/noteAmount"
             android:hint="@string/NoteAmount"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_marginBottom="20sp"
+        android:padding="10dp"
         android:layout_height="wrap_content">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
+            android:textColor="#212121"
+            android:background="#FFFFFF"
+            android:textColorHint="@color/PrimaryBlue"
             android:id="@+id/noteDescription"
             android:hint="@string/noteDescription"/>
     </com.google.android.material.textfield.TextInputLayout>
@@ -81,16 +97,24 @@
         android:gravity="center"
         android:padding="15sp">
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="#1E88E5"
+            android:backgroundTint="@color/white"
+            app:cornerRadius="16dp"
             android:text="@string/cancel"
             android:layout_marginRight="50sp"
             android:id="@+id/cancel"/>
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:backgroundTint="#1E88E5"
+            app:cornerRadius="16dp"
+            app:strokeColor="#1E88E5"
+            app:strokeWidth="1dp"
             android:text="@string/Add"
             android:id="@+id/addNote"/>
 

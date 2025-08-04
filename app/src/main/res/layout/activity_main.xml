@@ -6,15 +6,15 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/VeryLightGrey"
     tools:context=".MainActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/toolbar"
+        app:titleTextColor="@color/white"
         android:background="@color/lavendar"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.DayNight.ActionBar"
         app:layout_constraintTop_toTopOf="parent"/>
 
 
@@ -40,6 +40,7 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:text="Welcome!"
+            android:textColor="#212121"
             android:layout_marginRight="5sp"
             android:textSize="25sp"
             android:textStyle="bold"/>
@@ -69,8 +70,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@color/cardview_light_background"
-        android:padding="16dp">
+        android:padding="10dp"
+        android:elevation="4dp"
+        android:background="@drawable/rounded_mini_layout">
 
         <!-- Row 1: Labels with Icons -->
         <LinearLayout
@@ -90,12 +92,14 @@
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@drawable/credit_icon" />
+                    android:src="@drawable/credit_icon"
+                    app:tint="#388E3C" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=" Credit"
+                    android:textColor="#388E3C"
                     android:textSize="16sp" />
             </LinearLayout>
 
@@ -110,12 +114,14 @@
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
+                    app:tint="#D32F2F"
                     android:src="@drawable/debit_icon" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=" Debit"
+                    android:textColor="#D32F2F"
                     android:textSize="16sp" />
             </LinearLayout>
 
@@ -130,12 +136,14 @@
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
+                    app:tint="#F9A825"
                     android:src="@drawable/investment_icon" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=" Investment"
+                    android:textColor="#F9A825"
                     android:textSize="16sp" />
             </LinearLayout>
         </LinearLayout>
@@ -154,8 +162,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="$1000"
+                android:textColor="#388E3C"
                 android:gravity="center"
-                android:textSize="16sp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/debitAmount"
@@ -163,8 +172,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="$500"
+                android:textColor="#D32F2F"
                 android:gravity="center"
-                android:textSize="16sp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/investmentAmount"
@@ -172,8 +182,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="$700"
+                android:textColor="#F9A825"
                 android:gravity="center"
-                android:textSize="16sp" />
+                android:textSize="18sp" />
         </LinearLayout>
 
         <!-- Row 3: Available Balance -->
@@ -188,19 +199,35 @@
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
+                app:tint="#1E88E5"
                 android:src="@drawable/available_balance_icon" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=" Available Balance: "
+                android:textColor="#1E88E5"
                 android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <!-- Row 4: Available Balance Amount-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginTop="10sp"
+            android:orientation="horizontal"
+            android:gravity="center">
+
             <TextView
                 android:id="@+id/AvailableBalanceAmount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="1000"
-                android:textSize="16sp" />
+                android:textColor="#1E88E5"
+                android:textSize="18sp" />
+
         </LinearLayout>
     </LinearLayout>
 
@@ -227,6 +254,7 @@
             android:layout_width="0dp"
             android:gravity="center"
             android:text=""
+            app:iconTint="#388E3C"
             app:iconGravity="textStart"
             android:layout_height="wrap_content"
             android:layout_marginRight="10sp"
@@ -237,6 +265,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:text=""
+            app:iconTint="#D32F2F"
             app:iconGravity="textStart"
             android:layout_height="wrap_content"
             android:layout_marginRight="10sp"
@@ -247,6 +276,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:text=""
+            app:iconTint="#F9A825"
             app:iconGravity="textStart"
             android:gravity="center"
             android:layout_height="wrap_content"
@@ -274,8 +304,8 @@
         android:src="@drawable/baseline_note_add_24"
         app:fabSize="normal"
         android:layout_marginBottom="25sp"
-        android:backgroundTint="@color/lavendar"
-        android:background="@color/lavendar"
+        android:backgroundTint="@color/PrimaryBlue"
+        app:tint="@color/white"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
          />
     </FrameLayout>
