@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">GK Money</string>
-    <string name="email">email</string>
-    <string name="password">password</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
     <string name="Login">Login</string>
     <string name="ClickToRegister">Click to Register</string>
     <string name="ForgetPassword">Forget Password</string>

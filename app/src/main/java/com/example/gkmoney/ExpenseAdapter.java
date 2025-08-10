@@ -23,7 +23,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
     }
 
     public static class ExpenseViewHolder extends RecyclerView.ViewHolder {
-        TextView txtNoteType, txtNoteDescription, txtDate, txtAmount;
+        TextView txtNoteType,txtNoteCategory,  txtNoteDescription, txtDate, txtAmount;
         ImageView imgType;
 
         public ExpenseViewHolder(View itemView) {
@@ -33,6 +33,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
             txtDate = itemView.findViewById(R.id.noteDate);
             txtAmount = itemView.findViewById(R.id.noteAmount);
             imgType = itemView.findViewById(R.id.noteType);
+            txtNoteCategory = itemView.findViewById(R.id.noteCategory);
         }
     }
 
@@ -50,6 +51,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
     public void onBindViewHolder(@NonNull ExpenseViewHolder holder, int position) {
         Expense expense = expenseList.get(position);
         holder.txtNoteDescription.setText(expense.NoteDescription);
+        holder.txtNoteCategory.setText(expense.NoteCategory);
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
         String noteDateStr = sdf.format(expense.date);
         holder.txtDate.setText(noteDateStr );

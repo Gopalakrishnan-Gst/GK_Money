@@ -24,7 +24,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -43,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     Button CurrentmonthNotes, AllNotes, AllNoteDtls, CreditNoteDtls, DebitNoteDtls, InvestmentNoteDtls;
     TextView CreditAmount, DebitAmount, InvestmentAmount, AvailableBalance;
 
-    String TopFilter, SecondaryFilter, CurrentUserMailId;
+    String TopFilter, SecondaryFilter;
 
 
 
@@ -62,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
 
         firebaseAuth = FirebaseAuth.getInstance();
-        CurrentUserMailId = firebaseAuth.getCurrentUser().getEmail().toString();
+
 
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -110,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
 
                 //Dashboard display function
                 calculateBalanceFromFirestoreForCurrentMonthNotes();
+
 
             }
         });
@@ -236,6 +239,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void constructNotesData(QueryDocumentSnapshot document, List<Expense> expenses) {
         String noteType = document.getString("NOTE_TYPE");
+        String noteCategory = document.getString("NOTE_CATEGORY");
         Double noteAmount = document.getDouble("NOTE_AMOUNT");
         Date noteDate = document.getDate("NOTE_DATE");
         String noteDescription = document.getString("NOTE_DESCRIPTION");
@@ -247,15 +251,26 @@ public class MainActivity extends AppCompatActivity {
         } else {
             iconResId = R.drawable.investment_icon;
         }
-        expenses.add(new Expense(noteType, noteDescription, noteDate,noteAmount, iconResId));
+        expenses.add(new Expense(noteType,noteCategory, noteDescription, noteDate,noteAmount, iconResId));
 
     }
 
     public void fetchNoteDtls(String TopFilter, String SecondaryFilter){
         List<Expense> expenses = new ArrayList<>();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        // 1️⃣ Check if user is logged in and email exists
+        if (user == null || user.getEmail() == null || user.getEmail().isEmpty()) {
+            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
+            return; // Exit early to avoid crash
+        }
+
+        String CurrentUserMailId = user.getEmail();
+
         if (TopFilter=="ALL_NOTES" && SecondaryFilter=="ALL_NOTE_DTLS"){
             db.collection("Notes")
-                    //.whereEqualTo("CREATED_BY",CurrentUserMailId)
+                    .whereEqualTo("CREATED_BY",CurrentUserMailId)
+                    //.orderBy("NOTE_DATE", Query.Direction.DESCENDING)
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
@@ -278,9 +293,11 @@ public class MainActivity extends AppCompatActivity {
 
                     });
         } else if (TopFilter=="ALL_NOTES" && SecondaryFilter=="CREDIT_NOTE_DTLS") {
-            db.collection("Notes")
-                    //.whereEqualTo("CREATED_BY",CurrentUserMailId)
-                    .whereEqualTo("NOTE_TYPE","Credit")
+
+             db.collection("Notes")
+                     .whereEqualTo("CREATED_BY",CurrentUserMailId)
+                     .whereEqualTo("NOTE_TYPE","Credit")
+                     //.orderBy("NOTE_DATE", Query.Direction.DESCENDING)
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
@@ -304,8 +321,9 @@ public class MainActivity extends AppCompatActivity {
                     });
         } else if (TopFilter=="ALL_NOTES" && SecondaryFilter=="DEBIT_NOTE_DTLS") {
             db.collection("Notes")
-                    //.whereEqualTo("CREATED_BY",CurrentUserMailId)
+                    .whereEqualTo("CREATED_BY",CurrentUserMailId)
                     .whereEqualTo("NOTE_TYPE","Debit")
+                    //.orderBy("NOTE_DATE", Query.Direction.DESCENDING)
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
@@ -329,8 +347,9 @@ public class MainActivity extends AppCompatActivity {
                     });
         } else if (TopFilter=="ALL_NOTES" && SecondaryFilter=="INVESTMENT_NOTE_DTLS") {
             db.collection("Notes")
-                    //.whereEqualTo("CREATED_BY",CurrentUserMailId)
+                    .whereEqualTo("CREATED_BY",CurrentUserMailId)
                     .whereEqualTo("NOTE_TYPE","Investment")
+                    //.orderBy("NOTE_DATE", Query.Direction.DESCENDING)
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
@@ -355,9 +374,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (TopFilter=="CURRENT_MONTH_NOTES" && SecondaryFilter=="ALL_NOTE_DTLS"){
+
             db.collection("Notes")
-                    //.whereEqualTo("CREATED_BY",CurrentUserMailId)
-                    .whereGreaterThanOrEqualTo("NOTE_DATE",getFirstDayOfMonth()  )
+                    .whereEqualTo("CREATED_BY",CurrentUserMailId)
+                    .whereGreaterThanOrEqualTo("NOTE_DATE",getFirstDayOfMonth())
+                    //.orderBy("NOTE_DATE", Query.Direction.DESCENDING)
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
@@ -380,10 +401,12 @@ public class MainActivity extends AppCompatActivity {
 
                     });
         } else if (TopFilter=="CURRENT_MONTH_NOTES" && SecondaryFilter=="CREDIT_NOTE_DTLS") {
+
             db.collection("Notes")
-                    //.whereEqualTo("CREATED_BY",CurrentUserMailId)
-                    .whereGreaterThanOrEqualTo("NOTE_DATE",getFirstDayOfMonth())
                     .whereEqualTo("NOTE_TYPE","Credit")
+                    .whereEqualTo("CREATED_BY",CurrentUserMailId)
+                    .whereGreaterThanOrEqualTo("NOTE_DATE",getFirstDayOfMonth())
+                    //.orderBy("NOTE_DATE", Query.Direction.DESCENDING)
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
@@ -406,10 +429,12 @@ public class MainActivity extends AppCompatActivity {
 
                     });
         } else if (TopFilter=="CURRENT_MONTH_NOTES" && SecondaryFilter=="DEBIT_NOTE_DTLS") {
-            db.collection("Notes")
-                    //.whereEqualTo("CREATED_BY",CurrentUserMailId)
+
+             db.collection("Notes")
+                     .whereEqualTo("NOTE_TYPE","Debit")
+                    .whereEqualTo("CREATED_BY",CurrentUserMailId)
                     .whereGreaterThanOrEqualTo("NOTE_DATE",getFirstDayOfMonth())
-                    .whereEqualTo("NOTE_TYPE","Debit")
+                    //.orderBy("NOTE_DATE", Query.Direction.DESCENDING)
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
@@ -432,10 +457,12 @@ public class MainActivity extends AppCompatActivity {
 
                     });
         } else if (TopFilter=="CURRENT_MONTH_NOTES" && SecondaryFilter=="INVESTMENT_NOTE_DTLS") {
+
             db.collection("Notes")
-                    //.whereEqualTo("CREATED_BY",CurrentUserMailId)
-                    .whereGreaterThanOrEqualTo("NOTE_DATE",getFirstDayOfMonth())
                     .whereEqualTo("NOTE_TYPE","Investment")
+                    .whereEqualTo("CREATED_BY",CurrentUserMailId)
+                    .whereGreaterThanOrEqualTo("NOTE_DATE",getFirstDayOfMonth())
+                    //.orderBy("NOTE_DATE", Query.Direction.DESCENDING)
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
@@ -463,12 +490,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void calculateBalanceFromFirestoreForAllNotes() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        // 1️⃣ Check if user is logged in and email exists
+        if (user == null || user.getEmail() == null || user.getEmail().isEmpty()) {
+            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
+            return; // Exit early to avoid crash
+        }
+
+        String CurrentUserMailId = user.getEmail();
+
          db.collection("Notes")
+                 .whereEqualTo("CREATED_BY",CurrentUserMailId)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     double totalCredit = 0;
                     double totalDebit = 0;
                     double totalInvestment = 0;
+
 
                     for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                         String type = doc.getString("NOTE_TYPE");
@@ -500,8 +539,20 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void calculateBalanceFromFirestoreForCurrentMonthNotes() {
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        // 1️⃣ Check if user is logged in and email exists
+        if (user == null || user.getEmail() == null || user.getEmail().isEmpty()) {
+            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
+            return; // Exit early to avoid crash
+        }
+
+        String CurrentUserMailId = user.getEmail();
+
         db.collection("Notes")
                 .whereGreaterThanOrEqualTo("NOTE_DATE",getFirstDayOfMonth())
+                .whereEqualTo("CREATED_BY",CurrentUserMailId)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     double totalCredit = 0;
@@ -535,6 +586,8 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
+
+
 
 
 
