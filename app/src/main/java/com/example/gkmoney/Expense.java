@@ -9,6 +9,7 @@ public class Expense {
     public Date date;
     public double amount;
     public int iconResId;
+    private String docId;
 
     public Expense(String NoteType,String NoteCategory,  String NoteDescription, Date date, double amount, int iconResId) {
         this.NoteType = NoteType;
@@ -18,5 +19,8 @@ public class Expense {
         this.amount = amount;
         this.iconResId = iconResId;
     }
+
+    public String getDocId() { return docId; }
+    public void setDocId(String docId) { this.docId = docId; }
 }
 
