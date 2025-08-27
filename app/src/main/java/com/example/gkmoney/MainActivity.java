@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     Button CurrentmonthNotes, AllNotes, AllNoteDtls, CreditNoteDtls, DebitNoteDtls, InvestmentNoteDtls;
     TextView CreditAmount, DebitAmount, InvestmentAmount, AvailableBalance, EmptyView;
 
-    String TopFilter, SecondaryFilter;
+    String TopFilter, SecondaryFilter, userMailId;
 
 
     private RecyclerView recyclerView;
@@ -75,6 +75,8 @@ public class MainActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
 
         firebaseAuth = FirebaseAuth.getInstance();
+
+        userMailId = firebaseAuth.getCurrentUser().getEmail().toString();
 
 
 
@@ -319,12 +321,9 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.accountDetails) {
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             if (user != null) {
-                String email = user.getEmail();
-                String name = user.getDisplayName();
-
                 new AlertDialog.Builder(MainActivity.this)
                         .setTitle("Account Info")
-                        .setMessage("Logged in as:\n" + (name != null ? name : email))
+                        .setMessage("Logged in as:\n" + userMailId)
                         .setPositiveButton("Logout", (dialog, which) -> {
                             firebaseAuth.signOut();
                             Toast.makeText(MainActivity.this, "Logged out", Toast.LENGTH_SHORT).show();
