@@ -1,7 +1,10 @@
 package com.example.gkmoney;
 
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -114,6 +118,11 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+        Drawable deleteIcon = ContextCompat.getDrawable(this, R.drawable.ic_delete); // your delete icon
+        ColorDrawable background = new ColorDrawable(Color.RED);
+        int intrinsicWidth = deleteIcon.getIntrinsicWidth();
+        int intrinsicHeight = deleteIcon.getIntrinsicHeight();
+
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -125,19 +134,16 @@ public class MainActivity extends AppCompatActivity {
                 int position = viewHolder.getAdapterPosition();
                 Expense deletedExpense = expenses.get(position);
 
-                // Show confirmation dialog
                 new AlertDialog.Builder(MainActivity.this)
                         .setTitle("Delete Note")
                         .setMessage("Are you sure you want to delete this note?")
                         .setPositiveButton("Yes", (dialog, which) -> {
-                            // Remove visually first
                             expenses.remove(position);
                             adapter.notifyItemRemoved(position);
                             calculateBalance(TopFilter);
 
                             Snackbar.make(recyclerView, "Note deleted", Snackbar.LENGTH_LONG)
                                     .setAction("UNDO", v -> {
-                                        // Restore item if UNDO pressed
                                         expenses.add(position, deletedExpense);
                                         adapter.notifyItemInserted(position);
                                         recyclerView.scrollToPosition(position);
@@ -147,20 +153,18 @@ public class MainActivity extends AppCompatActivity {
                                         @Override
                                         public void onDismissed(Snackbar snackbar, int event) {
                                             if (event != Snackbar.Callback.DISMISS_EVENT_ACTION) {
-                                                // Only delete from Firestore if UNDO NOT pressed
                                                 db.collection("Notes")
                                                         .document(deletedExpense.getDocId())
                                                         .delete()
-                                                        .addOnSuccessListener(aVoid ->{
+                                                        .addOnSuccessListener(aVoid -> {
                                                             displayEmptyView();
                                                             calculateBalance(TopFilter);
                                                             Toast.makeText(MainActivity.this, "Note deleted permanently", Toast.LENGTH_SHORT).show();
                                                         })
-                                                            .addOnFailureListener(e -> {
-                                                            // Restore item if Firestore delete fails
+                                                        .addOnFailureListener(e -> {
                                                             expenses.add(position, deletedExpense);
                                                             adapter.notifyItemInserted(position);
-                                                                calculateBalance(TopFilter);
+                                                            calculateBalance(TopFilter);
                                                             Toast.makeText(MainActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                                         });
                                             }
@@ -169,7 +173,6 @@ public class MainActivity extends AppCompatActivity {
                                     .show();
                         })
                         .setNegativeButton("No", (dialog, which) -> {
-                            // Restore item if user cancels
                             adapter.notifyItemChanged(position);
                             calculateBalance(TopFilter);
                             dialog.dismiss();
@@ -178,8 +181,35 @@ public class MainActivity extends AppCompatActivity {
                         .show();
             }
 
+            @Override
+            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView,
+                                    @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY,
+                                    int actionState, boolean isCurrentlyActive) {
+
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+
+                View itemView = viewHolder.itemView;
+                int itemHeight = itemView.getBottom() - itemView.getTop();
+
+                // Draw red background
+                background.setBounds(itemView.getRight() + (int) dX, itemView.getTop(),
+                        itemView.getRight(), itemView.getBottom());
+                background.draw(c);
+
+                // Position delete icon
+                int deleteIconTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
+                int deleteIconMargin = (itemHeight - intrinsicHeight) / 2;
+                int deleteIconLeft = itemView.getRight() - deleteIconMargin - intrinsicWidth;
+                int deleteIconRight = itemView.getRight() - deleteIconMargin;
+                int deleteIconBottom = deleteIconTop + intrinsicHeight;
+
+                // Draw delete icon
+                deleteIcon.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom);
+                deleteIcon.draw(c);
+            }
         });
         itemTouchHelper.attachToRecyclerView(recyclerView);
+
 
 
 
