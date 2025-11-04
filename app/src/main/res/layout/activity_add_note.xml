@@ -6,6 +6,7 @@
     android:background="#F5F5F5"
     android:id="@+id/main"
     tools:context=".AddNote"
+    android:windowSoftInputMode="adjustResize"
     android:layout_height="match_parent">
 
     <LinearLayout

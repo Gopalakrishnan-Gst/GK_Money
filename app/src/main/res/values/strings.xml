@@ -17,4 +17,10 @@
     <string name="cancel">Cancel</string>
     <string name="All">All</string>
     <string name="CurrentMonth">CurrentMonth</string>
+    <string name="action_name">VocabPostGen</string>
+    <string-array name="template_array">
+        <item>Dark Gradient</item>
+        <item>Light Gradient</item>
+        <item>Solid Dark</item>
+    </string-array>
 </resources>

@@ -101,8 +101,8 @@ public class AddNote extends AppCompatActivity implements AdapterView.OnItemSele
         noteCategory = findViewById(R.id.noteCategory);
         categoryMap = new HashMap<>();
         categoryMap.put("Credit", Arrays.asList("Salary", "Dividend","Bond Interest","Bank Interest", "Other Income"));
-        categoryMap.put("Debit", Arrays.asList("Food", "Shopping", "Bills", "Travel"));
-        categoryMap.put("Investment", Arrays.asList("Stocks", "Mutual Funds", "Real Estate","Gold"));
+        categoryMap.put("Debit", Arrays.asList("Food", "Shopping", "Bills", "Travel", "Others"));
+        categoryMap.put("Investment", Arrays.asList("Stocks", "Mutual Funds", "Real Estate","Gold", "Gold Schemes", "Others"));
 
         noteType.setOnItemClickListener((parent, view, position, id) -> {
             String selectedType = noteTypes[position];

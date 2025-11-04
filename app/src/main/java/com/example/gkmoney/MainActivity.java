@@ -34,6 +34,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.client.utils.DateUtils;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -47,6 +48,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.time.LocalDate;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -313,6 +315,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        FloatingActionButton instaImgGenerator = findViewById(R.id.instaImgGenerator);
+        instaImgGenerator.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), InstagramPostActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
 
 
@@ -391,6 +402,17 @@ public class MainActivity extends AppCompatActivity {
         return cal.getTime(); // java.util.Date
     }
 
+    // Returns the last day of the month for a given Date
+    public static Date getLastDayOfMonth(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        // Move to the last day of the month
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+
+        return calendar.getTime();
+    }
+
     public void constructNotesData(QueryDocumentSnapshot document, List<Expense> expenses) {
         String noteType = document.getString("NOTE_TYPE");
         String noteCategory = document.getString("NOTE_CATEGORY");
@@ -431,6 +453,9 @@ public class MainActivity extends AppCompatActivity {
         String CurrentUserMailId = user.getEmail();
         Query query = null;
 
+        Date today = new Date();
+        Date lastDay = getLastDayOfMonth(today);
+
         // Example: ALL_NOTES + ALL_NOTE_DTLS
         if ("ALL_NOTES".equals(TopFilter) && "ALL_NOTE_DTLS".equals(SecondaryFilter)) {
             query = db.collection("Notes")
@@ -459,6 +484,7 @@ public class MainActivity extends AppCompatActivity {
             query = db.collection("Notes")
                     .whereEqualTo("CREATED_BY", CurrentUserMailId)
                     .whereGreaterThanOrEqualTo("NOTE_DATE",getFirstDayOfMonth())
+                    .whereLessThanOrEqualTo("NOTE_DATE",lastDay)
                     .orderBy("NOTE_DATE", Query.Direction.DESCENDING);
         }
         else if ("CURRENT_MONTH_NOTES".equals(TopFilter) && "CREDIT_NOTE_DTLS".equals(SecondaryFilter)) {
@@ -466,6 +492,7 @@ public class MainActivity extends AppCompatActivity {
                     .whereEqualTo("CREATED_BY", CurrentUserMailId)
                     .whereEqualTo("NOTE_TYPE", "Credit")
                     .whereGreaterThanOrEqualTo("NOTE_DATE",getFirstDayOfMonth())
+                    .whereLessThanOrEqualTo("NOTE_DATE",lastDay)
                     .orderBy("NOTE_DATE", Query.Direction.DESCENDING);
         }
         else if ("CURRENT_MONTH_NOTES".equals(TopFilter) && "DEBIT_NOTE_DTLS".equals(SecondaryFilter)) {
@@ -473,6 +500,7 @@ public class MainActivity extends AppCompatActivity {
                     .whereEqualTo("CREATED_BY", CurrentUserMailId)
                     .whereEqualTo("NOTE_TYPE", "Debit")
                     .whereGreaterThanOrEqualTo("NOTE_DATE",getFirstDayOfMonth())
+                    .whereLessThanOrEqualTo("NOTE_DATE",lastDay)
                     .orderBy("NOTE_DATE", Query.Direction.DESCENDING);
         }
         else if ("CURRENT_MONTH_NOTES".equals(TopFilter) && "INVESTMENT_NOTE_DTLS".equals(SecondaryFilter)) {
@@ -480,6 +508,7 @@ public class MainActivity extends AppCompatActivity {
                     .whereEqualTo("CREATED_BY", CurrentUserMailId)
                     .whereEqualTo("NOTE_TYPE", "Investment")
                     .whereGreaterThanOrEqualTo("NOTE_DATE",getFirstDayOfMonth())
+                    .whereLessThanOrEqualTo("NOTE_DATE",lastDay)
                     .orderBy("NOTE_DATE", Query.Direction.DESCENDING);
         }
 
@@ -510,12 +539,15 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+        Date today = new Date();
+        Date lastDay = getLastDayOfMonth(today);
+
         String CurrentUserMailId = user.getEmail();
         Query query = db.collection("Notes").whereEqualTo("CREATED_BY", CurrentUserMailId);
 
         // ✅ If Current Month, add date filter
         if ("CURRENT_MONTH_NOTES".equals(TopFilter)) {
-            query = query.whereGreaterThanOrEqualTo("NOTE_DATE", getFirstDayOfMonth());
+            query = query.whereGreaterThanOrEqualTo("NOTE_DATE", getFirstDayOfMonth()).whereLessThanOrEqualTo("NOTE_DATE",lastDay);
         }
 
         query.get()
