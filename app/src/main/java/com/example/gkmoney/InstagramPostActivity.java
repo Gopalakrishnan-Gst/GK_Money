@@ -127,7 +127,7 @@ public class InstagramPostActivity extends AppCompatActivity {
             case 0: return R.drawable.post_bg_gradient_dark;
             case 1: return R.drawable.post_bg_gradient_light;
             case 2: return R.drawable.post_bg_solid_dark;
-            default: return R.drawable.post_bg_solid_dark;
+            default: return R.drawable.post_bg_gradient_dark;
         }
     }
 
